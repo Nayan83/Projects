@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>will you be my valentine? ❤️</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: #ffccdc;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            overflow: hidden;
+        }
+        .container {
+            margin-top: 100px;
+        }
+        h1 {
+            color: #ff3366;
+            font-size: 2.8em;
+            animation: fadeIn 2s ease-in-out;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        button {
+            font-size: 22px;
+            padding: 12px 24px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        #yes {
+            background-color: #ff4d4d;
+            color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #no {
+            background-color: white;
+            color: black;
+            position: absolute;
+            font-size: 20px;
+            padding: 12px 24px;
+        }
+        #message {
+            font-size: 2em;
+            color: #ff3366;
+            display: none;
+            animation: popUp 1s ease-in-out;
+        }
+        #loveLetter {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+            font-size: 18px;
+            color: #ff3366;
+        }
+        #closeLetter {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes popUp {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .hearts {
+            position: absolute;
+            font-size: 30px;
+            color: red;
+            animation: floatUp 3s linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100px); opacity: 0; }
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>will you be my Valentine? ❤️</h1>
+        <div class="buttons">
+            <button id="yes">Haan, pakka! 😍</button>
+            <button id="no">Nahi 😢</button>
+        </div>
+        <h2 id="message" class="hidden">Best day ever! ❤️🥰</h2>
+        <div id="heartContainer"></div>
+
+        <!-- Love Letter Popup -->
+        <div id="loveLetter">
+            <p>Meri pyaari ❤️,<br><br>  
+            Jabse tujhe dekha hai, tabse sirf tu hi mere dil mein hai!  
+            Tu meri duniya ka sabse special insaan hai. 💖  
+            Tere bina sab suna lagta hai.  
+            <br><br>  
+            **Happy Valentine's Day!** 🌸  
+            </p>
+            <button id="closeLetter">Awww 😘</button>
+        </div>
+
+        <!-- Fireworks Canvas -->
+        <canvas id="fireworks"></canvas>
+
+        <!-- Background Music -->
+        <audio id="bgMusic" loop>
+            <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mp3">
+        </audio>
+    </div>
+
+    <script>
+        const noButton = document.getElementById("no");
+        const yesButton = document.getElementById("yes");
+        const message = document.getElementById("message");
+        const heartContainer = document.getElementById("heartContainer");
+        const loveLetter = document.getElementById("loveLetter");
+        const closeLetter = document.getElementById("closeLetter");
+        const bgMusic = document.getElementById("bgMusic");
+
+        yesButton.addEventListener("click", function () {
+            message.style.display = "block"; // Show message
+            loveLetter.style.display = "block"; // Show love letter popup
+            document.querySelector(".buttons").style.display = "none";
+            bgMusic.play(); // Play background music
+
+            // Fireworks effect
+            let canvas = document.getElementById("fireworks");
+            let ctx = canvas.getContext("2d");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            let particles = [];
+
+            function createParticles(x, y) {
+                for (let i = 0; i < 30; i++) {
+                    particles.push({
+                        x: x,
+                        y: y,
+                        vx: Math.random() * 4 - 2,
+                        vy: Math.random() * 4 - 2,
+                        alpha: 1,
+                        size: Math.random() * 4 + 2
+                    });
+                }
+            }
+
+            function drawParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((p, index) => {
+                    ctx.globalAlpha = p.alpha;
+                    ctx.fillStyle = "red";
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.alpha -= 0.02;
+                    if (p.alpha <= 0) particles.splice(index, 1);
+                });
+                requestAnimationFrame(drawParticles);
+            }
+
+            createParticles(window.innerWidth / 2, window.innerHeight / 2);
+            drawParticles();
+        });
+
+        closeLetter.addEventListener("click", function () {
+            loveLetter.style.display = "none"; // Hide love letter
+        });
+
+        noButton.addEventListener("mouseover", function () {
+            const x = Math.random() * (window.innerWidth - 150);
+            const y = Math.random() * (window.innerHeight - 50);
+            noButton.style.left = `${x}px`;
+            noButton.style.top = `${y}px`;
+            noButton.innerHTML = "Arey vichar ta kar! 🥺";
+        });
+
+        noButton.addEventListener("click", function () {
+            noButton.innerHTML = "Asa nako karu! 💔";
+            setTimeout(() => {
+                noButton.innerHTML = "Nahi 😢";
+            }, 2000);
+        });
+
+    </script>
+</body>
+</html>
